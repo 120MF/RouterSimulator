@@ -4,12 +4,12 @@
 #include <gtkmm/button.h>
 #include <gtkmm/window.h>
 
-class HelloWorld : public Gtk::Window
+class MainWindow : public Gtk::Window
 {
 
 public:
-    HelloWorld();
-    ~HelloWorld() override;
+    MainWindow();
+    ~MainWindow() override;
 
 protected:
     //Signal handlers:
