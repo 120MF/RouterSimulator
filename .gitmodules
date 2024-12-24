@@ -1,0 +1,3 @@
+[submodule "librouter"]
+	path = librouter
+	url = https://github.com/120MF/librouter.git
