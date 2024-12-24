@@ -16,6 +16,8 @@ include_directories(src)
 
 add_executable(RouterSimulator main.cpp
         src/MainWindow.h
-        src/MainWindow.cpp)
+        src/MainWindow.cpp
+        src/RouterContainer.cpp
+        src/RouterContainer.h)
 
 target_link_libraries(RouterSimulator ${GTKMM_LIBRARIES} librouter)
