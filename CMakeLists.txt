@@ -18,6 +18,15 @@ add_executable(RouterSimulator main.cpp
         src/MainWindow.h
         src/MainWindow.cpp
         src/RouterContainer.cpp
-        src/RouterContainer.h)
+        src/RouterContainer.h
+        src/RouterPaned.cpp
+        src/RouterPaned.h
+        src/RouterInfo.cpp
+        src/RouterInfo.h
+        src/RouterActions.cpp
+        src/RouterActions.h
+        src/RouterToolBar.cpp
+        src/RouterToolBar.h
+)
 
 target_link_libraries(RouterSimulator ${GTKMM_LIBRARIES} librouter)

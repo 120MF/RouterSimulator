@@ -5,7 +5,6 @@
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/eventcontrollermotion.h>
 RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
-    set_size_request(400,200);
     gesture_click_ = Gtk::GestureClick::create();
     gesture_click_->signal_pressed().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_click));
     gesture_click_->signal_released().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_release));
@@ -20,14 +19,9 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     nodes_.push_back({100,100,false});
     nodes_.push_back({200,200,false});
 }
-
-RouterDrawingArea::~RouterDrawingArea() {
-}
-
 void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int) {
-    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->set_source_rgb(1,1,1);
     cr->paint();
-
     for (const auto& node : nodes_) {
         draw_node(cr,node);
     }
@@ -67,7 +61,7 @@ void RouterDrawingArea::on_motion(double x, double y) {
 void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode &node) {
     cr->save();
     cr->arc(node.x,node.y,20,0,2*M_PI);
-    cr->set_source_rgb(node.selected ? 1.0 : 0.0,0.0,0.0);
+    cr->set_source_rgb(node.selected ? 1.0 : 0.5,0.0,0.3);
     cr->fill_preserve();
     cr->set_source_rgb(0.0,0.0,0.0);
     cr->stroke();
@@ -81,5 +75,3 @@ RouterContainer::RouterContainer(): area_() {
     set_label_align(Gtk::Align::START);
     set_child(area_);
 }
-
-RouterContainer::~RouterContainer() = default;

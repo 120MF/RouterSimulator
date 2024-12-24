@@ -13,7 +13,7 @@ namespace Gtk {
 class RouterDrawingArea : public Gtk::DrawingArea {
 public:
     RouterDrawingArea();
-    virtual ~RouterDrawingArea();
+    ~RouterDrawingArea() override = default;
 protected:
     struct RouterNode {
         double x,y;
@@ -37,7 +37,7 @@ private:
 class RouterContainer : public Gtk::Frame{
 public:
     RouterContainer();
-    virtual ~RouterContainer();
+    ~RouterContainer() override = default;
 protected:
     RouterDrawingArea area_;
 };

@@ -1,11 +1,13 @@
 #include "MainWindow.h"
-#include <iostream>
 
-MainWindow::MainWindow()
-{
+MainWindow::MainWindow() {
     set_title("RouterSimulator");
-    set_default_size(800,600);
-    set_child(router_container);
+    set_decorated(true);
+
+    vBox_.set_orientation(Gtk::Orientation::HORIZONTAL);
+    vBox_.append(router_container);
+    vBox_.append(paned_widget);
+    set_child(vBox_);
 }
 
 MainWindow::~MainWindow()
