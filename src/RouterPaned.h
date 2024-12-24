@@ -6,9 +6,11 @@
 #include "RouterActions.h"
 #include "RouterInfo.h"
 
+class RouterDrawingArea;
+
 class RouterPaned :public Gtk::Paned{
 public:
-    RouterPaned();
+    RouterPaned(RouterDrawingArea &area);
     ~RouterPaned() override = default;
 protected:
     RouterInfo router_info;

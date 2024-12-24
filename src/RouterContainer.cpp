@@ -5,10 +5,10 @@
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/eventcontrollermotion.h>
 RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
-    gesture_click_ = Gtk::GestureClick::create();
-    gesture_click_->signal_pressed().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_click));
-    gesture_click_->signal_released().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_release));
-    add_controller(gesture_click_);
+    gesture_click = Gtk::GestureClick::create();
+    gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_click));
+    gesture_click->signal_released().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_release));
+    add_controller(gesture_click);
 
     motion_controller_ = Gtk::EventControllerMotion::create();
     motion_controller_->signal_motion().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_motion));

@@ -1,6 +1,6 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow():paned_widget(router_container.area_) {
     set_title("RouterSimulator");
     set_decorated(true);
 

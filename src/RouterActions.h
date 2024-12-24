@@ -7,6 +7,8 @@
 
 #include "RouterToolBar.h"
 
+class RouterDrawingArea;
+
 class RouterActionDefault : public Gtk::Box {
 public:
     RouterActionDefault();
@@ -16,23 +18,28 @@ protected:
 
 class RouterActionAdd : public Gtk::Box {
 public:
-    RouterActionAdd();
+    RouterActionAdd(RouterDrawingArea& area);
 protected:
     Gtk::Entry entry_name;
     Gtk::Entry entry_delay;
     Gtk::Label label;
     void on_entry_change();
+    void on_drawing_area_click(int,double,double);
+private:
+    sigc::connection drawing_area_connection_;
+    RouterDrawingArea& area_;
 };
 
 class RouterActions : public Gtk::Box{
 public:
-    RouterActions();
+    RouterActions(RouterDrawingArea &area);
     void changeAction(IsUsingTool tool);
 protected:
     RouterToolBar tool_bar;
 
 private:
     Gtk::Widget* current_widget;
+    RouterDrawingArea &area_;
 };
 
 

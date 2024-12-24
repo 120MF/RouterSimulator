@@ -13,7 +13,7 @@ namespace Gtk {
 class RouterDrawingArea : public Gtk::DrawingArea {
 public:
     RouterDrawingArea();
-    ~RouterDrawingArea() override = default;
+    Glib::RefPtr<Gtk::GestureClick> gesture_click;
 protected:
     struct RouterNode {
         double x,y;
@@ -30,16 +30,15 @@ protected:
 
     void draw_node(const Cairo::RefPtr<Cairo::Context>& cr, const RouterNode& node);
 private:
-    Glib::RefPtr<Gtk::GestureClick> gesture_click_;
     Glib::RefPtr<Gtk::EventControllerMotion> motion_controller_;
 };
 
 class RouterContainer : public Gtk::Frame{
 public:
     RouterContainer();
-    ~RouterContainer() override = default;
-protected:
     RouterDrawingArea area_;
+protected:
+
 };
 
 

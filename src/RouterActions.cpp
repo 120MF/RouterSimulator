@@ -2,6 +2,11 @@
 #include <cctype>
 #include "RouterActions.h"
 
+#include <iostream>
+#include <gtkmm/gestureclick.h>
+
+#include "RouterContainer.h"
+
 bool is_number(const Glib::ustring& s) {
     return !s.empty() && std::ranges::all_of(s, ::isdigit);
 }
@@ -11,7 +16,7 @@ RouterActionDefault::RouterActionDefault() {
     append(label);
 }
 
-RouterActionAdd::RouterActionAdd() {
+RouterActionAdd::RouterActionAdd(RouterDrawingArea &area) : area_(area) {
     set_orientation(Gtk::Orientation::VERTICAL);
     set_spacing(5);
 
@@ -41,11 +46,16 @@ RouterActionAdd::RouterActionAdd() {
 void RouterActionAdd::on_entry_change() {
     if (entry_name.get_text_length() && entry_delay.get_text_length() && is_number(entry_delay.get_text())) {
         label.set_label("在左侧图中点击生成路由器节点！");
+        drawing_area_connection_ = area_.gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterActionAdd::on_drawing_area_click));
     }
-    else label.set_label("请输入路由器节点相关信息！");
+    else {label.set_label("请输入路由器节点相关信息！"); drawing_area_connection_.disconnect();}
 }
 
-RouterActions::RouterActions() {
+void RouterActionAdd::on_drawing_area_click(int,double,double) {
+    std::cout << "click!!" << std::endl;
+}
+
+RouterActions::RouterActions(RouterDrawingArea &area):area_(area) {
     set_orientation(Gtk::Orientation::VERTICAL);
     set_spacing(10);
     append(tool_bar);
@@ -57,7 +67,7 @@ RouterActions::RouterActions() {
 void RouterActions::changeAction(IsUsingTool tool) {
     switch (tool) {
         case AddRouter: {
-            auto routerAdder = Gtk::manage(new RouterActionAdd);
+            auto routerAdder = Gtk::manage(new RouterActionAdd(area_));
             remove(*current_widget);
             append(*routerAdder);
             current_widget = routerAdder;
