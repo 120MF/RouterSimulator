@@ -17,21 +17,30 @@ RouterToolBar::RouterToolBar() {
     button_erase.set_child(*icon_erase);
     button_erase.signal_clicked().connect(sigc::mem_fun(*this, &RouterToolBar::on_button_erase_pressed));
 
+    auto icon_connect = Gtk::manage(new Gtk::Image("icon-connect"));
+    button_connect.set_child(*icon_connect);
+    button_connect.signal_clicked().connect(sigc::mem_fun(*this, &RouterToolBar::on_button_connect_pressed));
+
 
     append(button_new);
     append(button_erase);
+    append(button_connect);
 }
 
 void RouterToolBar::on_button_new_pressed() {
-    auto parent = dynamic_cast<RouterActions*>(get_parent());
-    if (parent) {
-        parent->changeAction(IsUsingTool::AddRouter);
+    if (const auto parent = dynamic_cast<RouterActions*>(get_parent())) {
+        parent->changeAction(AddRouter);
     }
 }
 
 void RouterToolBar::on_button_erase_pressed() {
-    auto parent = dynamic_cast<RouterActions*>(get_parent());
-    if (parent) {
-        parent->changeAction(IsUsingTool::EraseRouter);
+    if (const auto parent = dynamic_cast<RouterActions*>(get_parent())) {
+        parent->changeAction(EraseRouter);
+    }
+}
+
+void RouterToolBar::on_button_connect_pressed() {
+    if (const auto parent = dynamic_cast<RouterActions*>(get_parent())) {
+        parent->changeAction(ConnectRouter);
     }
 }

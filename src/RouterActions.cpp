@@ -4,6 +4,7 @@
 #include <iostream>
 #include <gtkmm/gestureclick.h>
 
+#include "Actions/RouterActionConnect.h"
 #include "Actions/RouterActionErase.h"
 
 RouterActionDefault::RouterActionDefault() {
@@ -34,6 +35,13 @@ void RouterActions::changeAction(IsUsingTool tool) {
             remove(*current_widget);
             append(*routerEraser);
             current_widget = routerEraser;
+            break;
+        }
+        case ConnectRouter: {
+            auto routerConnector = Gtk::manage(new RouterActionConnect(area_));
+            remove(*current_widget);
+            append(*routerConnector);
+            current_widget = routerConnector;
             break;
         }
         default:
