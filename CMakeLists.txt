@@ -8,6 +8,9 @@ pkg_check_modules(GTKMM gtkmm-4.0)
 link_directories(${GTKMM_LIBRARY_DIRS})
 include_directories(${GTKMM_INCLUDE_DIRS})
 
+find_package(Freetype REQUIRED)
+include_directories(${FREETYPE_INCLUDE_DIRS})
+
 add_subdirectory(librouter)
 set(GENERATE_EXAMPLE_PROGRAM off)
 include_directories(librouter/src)
@@ -31,4 +34,4 @@ add_executable(RouterSimulator main.cpp
         src/Actions/RouterActionAdd.h
 )
 
-target_link_libraries(RouterSimulator ${GTKMM_LIBRARIES} librouter)
+target_link_libraries(RouterSimulator ${GTKMM_LIBRARIES} ${FREETYPE_LIBRARIES} librouter)

@@ -33,6 +33,7 @@ protected:
     void draw_node(const Cairo::RefPtr<Cairo::Context>& cr, const RouterNode& node);
 private:
     Glib::RefPtr<Gtk::EventControllerMotion> motion_controller_;
+    Glib::RefPtr<Cairo::FtFontFace> font_face_;
 };
 
 class RouterContainer : public Gtk::Frame{

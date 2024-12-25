@@ -11,6 +11,26 @@ std::vector<RouterNode> router_nodes;
 constexpr double RECT_WIDTH = 60;
 constexpr double RECT_HEIGHT = 40;
 
+Cairo::RefPtr<Cairo::FtFontFace> load_font(const std::string& font_path) {
+    FT_Library ft_library;
+    FT_Face ft_face;
+
+    if (FT_Init_FreeType(&ft_library)) {
+        throw std::runtime_error("Could not initialize FreeType library");
+    }
+
+    if (FT_New_Face(ft_library, font_path.c_str(), 0, &ft_face)) {
+        FT_Done_FreeType(ft_library);
+        throw std::runtime_error("Could not load font face");
+    }
+
+    auto font_face = Cairo::FtFontFace::create(ft_face, FT_LOAD_DEFAULT);
+    FT_Done_Face(ft_face);
+    FT_Done_FreeType(ft_library);
+
+    return font_face;
+}
+
 RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     gesture_click = Gtk::GestureClick::create();
     gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_click));
@@ -21,6 +41,7 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     motion_controller_->signal_motion().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_motion));
     add_controller(motion_controller_);
 
+    // font_face_ = load_font("/home/mf/codings/RouterSimulator/fonts/AlibabaPuHuiTi-3-75-SemiBold.ttf");
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
     router_nodes.push_back({new Router("1"),100,100,false});
@@ -70,17 +91,15 @@ void RouterDrawingArea::on_motion(double x, double y) {
 void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode &node) {
     cr->save();
 
-    // Draw rectangle
-
     cr->rectangle(node.x - RECT_WIDTH / 2, node.y - RECT_HEIGHT / 2, RECT_WIDTH, RECT_HEIGHT);
     cr->set_source_rgb(node.selected ? 1.0 : 0.5, 0.0, 0.3);
     cr->fill_preserve();
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->stroke();
 
-    // Draw text
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->select_font_face("Sans",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+    // cr->set_font_face(font_face_);
     cr->set_font_size(12);
     Cairo::TextExtents extents;
     cr->get_text_extents(node.router->get_name(), extents);
