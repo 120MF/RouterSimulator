@@ -4,6 +4,13 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/drawingarea.h>
 
+#include "Router.h"
+
+struct RouterNode {
+    Router* router;
+    double x,y;
+    bool selected;
+};
 
 namespace Gtk {
     class GestureClick;
@@ -15,12 +22,7 @@ public:
     RouterDrawingArea();
     Glib::RefPtr<Gtk::GestureClick> gesture_click;
 protected:
-    struct RouterNode {
-        double x,y;
-        bool selected;
-    };
 
-    std::vector<RouterNode> nodes_;
     RouterNode* selected_node_;
 
     void on_draw(const Cairo::RefPtr<Cairo::Context>& cr, int, int);
@@ -36,6 +38,7 @@ private:
 class RouterContainer : public Gtk::Frame{
 public:
     RouterContainer();
+    ~RouterContainer() override;
     RouterDrawingArea area_;
 protected:
 

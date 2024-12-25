@@ -3,6 +3,8 @@
 #include <iostream>
 #include <gtkmm/gestureclick.h>
 
+extern std::vector<RouterNode> router_nodes;
+
 bool is_number(const Glib::ustring& s) {
     return !s.empty() && std::ranges::all_of(s, ::isdigit);
 }
@@ -42,6 +44,11 @@ void RouterActionAdd::on_entry_change() {
     else {label.set_label("请输入路由器节点相关信息！"); drawing_area_connection_.disconnect();}
 }
 
-void RouterActionAdd::on_drawing_area_click(int,double,double) {
+void RouterActionAdd::on_drawing_area_click(int,double x,double y) {
     std::cout << "click!!" << std::endl;
+    auto router = new Router(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
+    router_nodes.push_back({router, x, y, false});
+    area_.queue_draw();
+    entry_name.set_text("");
+    entry_delay.set_text("");
 }
