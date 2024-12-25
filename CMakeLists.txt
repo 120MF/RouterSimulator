@@ -27,6 +27,8 @@ add_executable(RouterSimulator main.cpp
         src/RouterActions.h
         src/RouterToolBar.cpp
         src/RouterToolBar.h
+        src/Actions/RouterActionAdd.cpp
+        src/Actions/RouterActionAdd.h
 )
 
 target_link_libraries(RouterSimulator ${GTKMM_LIBRARIES} librouter)
