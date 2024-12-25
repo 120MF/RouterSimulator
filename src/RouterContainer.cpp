@@ -7,7 +7,6 @@
 #include <gtkmm/eventcontrollermotion.h>
 
 std::vector<RouterNode> router_nodes;
-
 constexpr double RECT_WIDTH = 60;
 constexpr double RECT_HEIGHT = 40;
 
@@ -50,7 +49,7 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
 
 
 void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int) {
-    cr->set_source_rgb(1,1,1);
+    cr->set_source_rgb(0.94509804,0.98039216,0.93333333);
     cr->paint();
     for (const auto& node : router_nodes) {
         draw_node(cr,node);
@@ -92,7 +91,8 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
     cr->save();
 
     cr->rectangle(node.x - RECT_WIDTH / 2, node.y - RECT_HEIGHT / 2, RECT_WIDTH, RECT_HEIGHT);
-    cr->set_source_rgb(node.selected ? 1.0 : 0.5, 0.0, 0.3);
+    if (selected_node_ == &node) cr->set_source_rgb(0.90196078, 0.22352941, 0.27450980);
+    else cr->set_source_rgb(0.65882353,0.85490196,0.86274510);
     cr->fill_preserve();
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->stroke();
