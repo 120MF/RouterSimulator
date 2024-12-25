@@ -7,8 +7,17 @@
 #include <gtkmm/eventcontrollermotion.h>
 
 std::vector<RouterNode> router_nodes;
+
 constexpr double RECT_WIDTH = 60;
 constexpr double RECT_HEIGHT = 40;
+
+bool isPosInRect(const double &nodeX, const double &nodeY, const double& clickX, const double& clickY) {
+    const double dx = clickX - nodeX;
+    const double dy = clickY - nodeY;
+    if (dx >= -RECT_WIDTH / 2 && dx <= RECT_WIDTH / 2 && dy >= -RECT_HEIGHT / 2 && dy <= RECT_HEIGHT / 2) return true;
+    return false;
+}
+
 
 Cairo::RefPtr<Cairo::FtFontFace> load_font(const std::string& font_path) {
     FT_Library ft_library;
@@ -60,9 +69,7 @@ void RouterDrawingArea::on_click(int n_press, double x, double y) {
     std::cout << n_press << " " << x << " " << y << " " << std::endl;
     if (n_press >= 1) {
         for (auto& node: router_nodes) {
-            double dx = x - node.x;
-            double dy = y - node.y;
-            if (dx >= -RECT_WIDTH / 2 && dx <= RECT_WIDTH / 2 && dy >= -RECT_HEIGHT / 2 && dy <= RECT_HEIGHT / 2) {
+            if (isPosInRect(node.x, node.y, x, y)) {
                 node.selected = true;
                 selected_node_ = &node;
                 queue_draw();

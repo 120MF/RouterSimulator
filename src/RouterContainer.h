@@ -6,6 +6,9 @@
 
 #include "Router.h"
 
+bool isPosInRect(const double &nodeX, const double &nodeY, const double& clickX, const double& clickY);
+
+
 struct RouterNode {
     Router* router;
     double x,y;
