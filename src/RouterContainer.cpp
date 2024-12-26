@@ -31,8 +31,8 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr) {
 
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
-    auto node1 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"), 100, 100, false});
-    auto node2 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"), 200, 200, false});
+    const auto node1 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"), 100, 100, false});
+    const auto node2 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"), 200, 200, false});
 
     router_graph.addNode(node1);
     router_graph.addNode(node2);
@@ -93,10 +93,9 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
     else cr->set_source_rgb(0.65882353, 0.85490196, 0.86274510);
     cr->fill_preserve();
 
-    if (node->onShortestPath) {
-        std::cout << "redraw sp node" << std::endl;
+    if (node->onShortestPath)
         cr->set_source_rgb(0.8, 0.2, 0.2);
-    } else
+    else
         cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->stroke();
 
@@ -120,7 +119,7 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::
                                   std::shared_ptr<RouterNode> node_v) {
     cr->save();
     if (node_s->onShortestPath && node_v->onShortestPath)
-        cr->set_source_rgb(0.8, 0.2, 0.2);
+        cr->set_source_rgb(0.8, 0.2, 0.2); //TODO: set #e63946
     else cr->set_source_rgb(0.0, 0.0, 0.0);
 
     cr->move_to(node_s->x, node_s->y);
@@ -136,7 +135,7 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::
     cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
     cr->set_font_size(10);
     Cairo::TextExtents extents;
-    std::string weight_text = std::to_string(weight);
+    const std::string weight_text = std::to_string(weight);
 
     cr->get_text_extents(weight_text, extents);
     cr->move_to(mid_x, mid_y - extents.height);

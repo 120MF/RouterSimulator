@@ -22,16 +22,17 @@ RouterActions::RouterActions(RouterDrawingArea &area): area_(area) {
     current_widget = default_action;
 }
 
-void RouterActions::changeAction(UsingAction tool) {
+void RouterActions::changeAction(const UsingAction action) {
     if (status_ == ShowShortestPath) {
+        RouterActionShowShortestPath::cleanupNodeBoolean();
+        area_.queue_draw();
     }
-    switch (tool) {
+    switch (action) {
         case AddRouter: {
             auto routerAdder = Gtk::manage(new RouterActionAdd(area_));
             remove(*current_widget);
             append(*routerAdder);
             current_widget = routerAdder;
-            status_ = AddRouter;
             break;
         }
         case EraseRouter: {
@@ -39,7 +40,6 @@ void RouterActions::changeAction(UsingAction tool) {
             remove(*current_widget);
             append(*routerEraser);
             current_widget = routerEraser;
-            status_ = EraseRouter;
             break;
         }
         case ConnectRouter: {
@@ -47,7 +47,6 @@ void RouterActions::changeAction(UsingAction tool) {
             remove(*current_widget);
             append(*routerConnector);
             current_widget = routerConnector;
-            status_ = ConnectRouter;
             break;
         }
         case ShowShortestPath: {
@@ -55,10 +54,10 @@ void RouterActions::changeAction(UsingAction tool) {
             remove(*current_widget);
             append(*routerPathfinder);
             current_widget = routerPathfinder;
-            status_ = ShowShortestPath;
             break;
         }
         default:
             break;
     }
+    status_ = action;
 }

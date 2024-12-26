@@ -12,8 +12,6 @@ class RouterActionShowShortestPath : public Gtk::Box {
 public:
     explicit RouterActionShowShortestPath(RouterDrawingArea &area_);
 
-    ~RouterActionShowShortestPath() override;
-
     static void cleanupNodeBoolean();
 
 protected:

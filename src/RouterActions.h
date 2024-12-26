@@ -30,7 +30,7 @@ class RouterActions : public Gtk::Box {
 public:
     RouterActions(RouterDrawingArea &area);
 
-    void changeAction(UsingAction tool);
+    void changeAction(UsingAction action);
 
 protected:
     RouterToolBar tool_bar;
