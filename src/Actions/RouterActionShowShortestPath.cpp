@@ -26,7 +26,12 @@ void RouterActionShowShortestPath::on_drawing_area_click(int, double x, double y
                 auto stack = node->router->getShortestPath(another_node_->router.get());
                 while (!stack.isEmpty()) {
                     const auto router = stack.top();
-                    const auto router_node = router_graph.getNode(router->hash());
+                    const auto router_node = router_graph.getNode(router->hash(),
+                                                                  [router](const std::shared_ptr<RouterNode> &node_) {
+                                                                      if (node_->router.get() == router)
+                                                                          return true;
+                                                                      else return false;
+                                                                  });
                     router_node->onShortestPath = true;
                     stack.pop();
                 }
