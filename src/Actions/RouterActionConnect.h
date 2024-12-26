@@ -15,7 +15,7 @@ protected:
     Gtk::Label label_;
 private:
     RouterDrawingArea& area_;
-    std::vector<RouterNode> two_nodes_;
+    std::shared_ptr<RouterNode> another_node_;
 };
 
 
