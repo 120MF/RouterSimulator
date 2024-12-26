@@ -7,6 +7,12 @@
 
 #include "RouterToolBar.h"
 
+enum UsingAction {
+    AddRouter = 1,
+    EraseRouter = 2,
+    ConnectRouter = 3,
+    ShowShortestPath = 4,
+};
 
 class RouterDrawingArea;
 
@@ -22,7 +28,7 @@ protected:
 class RouterActions : public Gtk::Box{
 public:
     RouterActions(RouterDrawingArea &area);
-    void changeAction(IsUsingTool tool);
+    void changeAction(UsingAction tool);
 protected:
     RouterToolBar tool_bar;
 

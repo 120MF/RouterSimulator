@@ -29,7 +29,6 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     motion_controller_->signal_motion().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_motion));
     add_controller(motion_controller_);
 
-    // font_face_ = load_font("/home/mf/codings/RouterSimulator/fonts/AlibabaPuHuiTi-3-75-SemiBold.ttf");
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
     auto node1 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"),100,100,false});

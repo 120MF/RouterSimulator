@@ -21,7 +21,7 @@ RouterActions::RouterActions(RouterDrawingArea &area):area_(area) {
     current_widget = default_action;
 }
 
-void RouterActions::changeAction(IsUsingTool tool) {
+void RouterActions::changeAction(UsingAction tool) {
     switch (tool) {
         case AddRouter: {
             auto routerAdder = Gtk::manage(new RouterActionAdd(area_));

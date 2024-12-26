@@ -4,13 +4,6 @@
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 
-enum IsUsingTool {
-    AddRouter = 1,
-    EraseRouter = 2,
-    ConnectRouter = 3,
-    ShowShortestPath = 4,
-};
-
 class RouterToolBar : public Gtk::Box{
 public:
     RouterToolBar();
@@ -25,16 +18,6 @@ protected:
     Gtk::Button button_showShortestPath;
 
 private:
-    IsUsingTool status_;
-
-public:
-    [[nodiscard]] IsUsingTool status() const {
-        return status_;
-    }
-
-    void set_status(IsUsingTool status) {
-        this->status_ = status;
-    }
 };
 
 
