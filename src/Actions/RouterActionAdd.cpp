@@ -45,7 +45,6 @@ void RouterActionAdd::on_entry_change() {
 }
 
 void RouterActionAdd::on_drawing_area_click(int,double x,double y) {
-    std::cout << "click!!" << std::endl;
     auto router = std::make_shared<Router>(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
     router_graph.addNode(std::make_shared<RouterNode>(RouterNode{router,x,y,false}));
     area_.queue_draw();
