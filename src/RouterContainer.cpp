@@ -1,12 +1,12 @@
 #include "RouterContainer.h"
-
+#include "data_structure/Graph.h"
 #include <iostream>
 #include <cairomm/context.h>
 #include <cairomm/fontface.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/eventcontrollermotion.h>
 
-std::vector<RouterNode> router_nodes;
+Graph<RouterNode, uint16_t> router_graph;
 
 constexpr double RECT_WIDTH = 60;
 constexpr double RECT_HEIGHT = 40;
@@ -52,31 +52,29 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     // font_face_ = load_font("/home/mf/codings/RouterSimulator/fonts/AlibabaPuHuiTi-3-75-SemiBold.ttf");
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
-    router_nodes.push_back({new Router("1"),100,100,false});
-    router_nodes.push_back({new Router("2"),200,200,false});
+    router_graph.addNode({new Router("1"),100,100,false});
+    router_graph.addNode({new Router("2"),200,200,false});
 }
 
 
 void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int) {
     cr->set_source_rgb(0.94509804,0.98039216,0.93333333);
     cr->paint();
-    for (const auto& node : router_nodes) {
-        draw_node(cr,node);
-    }
+    router_graph.visitAllNode([&cr, this](const RouterNode& node) {
+        draw_node(cr, node);
+    });
+
 }
 
 void RouterDrawingArea::on_click(int n_press, double x, double y) {
     std::cout << n_press << " " << x << " " << y << " " << std::endl;
-    if (n_press >= 1) {
-        for (auto& node: router_nodes) {
-            if (isPosInRect(node.x, node.y, x, y)) {
-                node.selected = true;
-                selected_node_ = &node;
-                queue_draw();
-                return;
-            }
+    router_graph.visitAllNode([this, x, y](RouterNode& node) {
+        if (isPosInRect(node.x, node.y, x, y)) {
+            node.selected = true;
+            selected_node_ = &node;
+            queue_draw();
         }
-    }
+    });
 }
 
 void RouterDrawingArea::on_release(int, double, double) {
@@ -125,7 +123,4 @@ RouterContainer::RouterContainer(): area_() {
 }
 
 RouterContainer::~RouterContainer() {
-    for (const auto & node : router_nodes) {
-        delete node.router;
-    }
 }

@@ -1,6 +1,7 @@
 #ifndef ROUTERAREA_H
 #define ROUTERAREA_H
 
+#include <functional>
 #include <gtkmm/frame.h>
 #include <gtkmm/drawingarea.h>
 
@@ -10,10 +11,58 @@ bool isPosInRect(const double &nodeX, const double &nodeY, const double& clickX,
 
 
 struct RouterNode {
+    RouterNode(Router* r, const double xPos, const double yPos, const bool sel) : router(r), x(xPos), y(yPos), selected(sel){}
+    RouterNode(const RouterNode &other)
+        : router(other.router),
+          x(other.x),
+          y(other.y),
+          selected(other.selected) {
+    }
+
+    RouterNode(RouterNode &&other) noexcept
+        : router(other.router),
+          x(other.x),
+          y(other.y),
+          selected(other.selected) {
+    }
+
+    RouterNode & operator=(const RouterNode &other) {
+        if (this == &other)
+            return *this;
+        router = other.router;
+        x = other.x;
+        y = other.y;
+        selected = other.selected;
+        return *this;
+    }
+
+    RouterNode & operator=(RouterNode &&other) noexcept {
+        if (this == &other)
+            return *this;
+        router = other.router;
+        x = other.x;
+        y = other.y;
+        selected = other.selected;
+        return *this;
+    }
+
+    ~RouterNode(){delete router;}
     Router* router;
     double x,y;
     bool selected;
 };
+
+template<>
+struct std::hash<RouterNode> {
+    std::size_t operator()(const RouterNode &node) const noexcept {
+        return static_cast<std::size_t>(node.router->hash());
+    }
+};
+
+inline std::ostream &operator<<(std::ostream &os, const RouterNode &node) {
+    os << node.router;
+    return os;
+}
 
 namespace Gtk {
     class GestureClick;

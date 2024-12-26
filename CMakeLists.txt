@@ -36,6 +36,7 @@ add_executable(RouterSimulator main.cpp
         src/Actions/RouterActionErase.h
         src/Actions/RouterActionConnect.cpp
         src/Actions/RouterActionConnect.h
+        src/RouterNodeGraphTemplateImpl.cpp
 )
 
 target_link_libraries(RouterSimulator ${GTKMM_LIBRARIES} ${FREETYPE_LIBRARIES} librouter)
