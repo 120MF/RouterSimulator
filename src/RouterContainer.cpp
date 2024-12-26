@@ -18,27 +18,6 @@ bool isPosInRect(const double &nodeX, const double &nodeY, const double& clickX,
     return false;
 }
 
-
-Cairo::RefPtr<Cairo::FtFontFace> load_font(const std::string& font_path) {
-    FT_Library ft_library;
-    FT_Face ft_face;
-
-    if (FT_Init_FreeType(&ft_library)) {
-        throw std::runtime_error("Could not initialize FreeType library");
-    }
-
-    if (FT_New_Face(ft_library, font_path.c_str(), 0, &ft_face)) {
-        FT_Done_FreeType(ft_library);
-        throw std::runtime_error("Could not load font face");
-    }
-
-    auto font_face = Cairo::FtFontFace::create(ft_face, FT_LOAD_DEFAULT);
-    FT_Done_Face(ft_face);
-    FT_Done_FreeType(ft_library);
-
-    return font_face;
-}
-
 RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     gesture_click = Gtk::GestureClick::create();
     gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_click));
@@ -112,12 +91,16 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
 
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->select_font_face("Sans",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
-    // cr->set_font_face(font_face_);
     cr->set_font_size(12);
     Cairo::TextExtents extents;
     cr->get_text_extents(node->router->get_name(), extents);
     cr->move_to(node->x - extents.width / 2, node->y + extents.height / 2);
     cr->show_text(node->router->get_name());
+
+    const std::string delay_s = std::to_string(node->router->delay());
+    cr->get_text_extents(delay_s, extents);
+    cr->move_to(node->x - extents.width / 2, node->y + RECT_HEIGHT);
+    cr->show_text(delay_s);
 
     cr->restore();
 }
@@ -129,10 +112,23 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, const
     cr->set_source_rgb(0.0, 0.0, 0.0);
 
     cr->move_to(node_s->x, node_s->y);
-
     cr->line_to(node_v->x, node_v->y);
-
     cr->stroke();
+
+    const double mid_x = (node_s->x + node_v->x) / 2;
+    const double mid_y = (node_s->y + node_v->y) / 2;
+
+    const uint32_t weight = node_s->router->delay() + node_v->router->delay();
+
+    cr->set_source_rgb(0.0, 0.0, 0.0);
+    cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
+    cr->set_font_size(10);
+    Cairo::TextExtents extents;
+    std::string weight_text = std::to_string(weight);
+
+    cr->get_text_extents(weight_text, extents);
+    cr->move_to(mid_x, mid_y - extents.height);
+    cr->show_text(weight_text);
 
     cr->restore();
 }
