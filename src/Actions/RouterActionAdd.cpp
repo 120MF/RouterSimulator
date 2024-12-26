@@ -29,6 +29,8 @@ RouterActionAdd::RouterActionAdd(RouterDrawingArea &area) : area_(area) {
 
     label.set_label("请输入路由器节点相关信息！");
 
+    area_.gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterActionAdd::on_drawing_area_click));
+
     entry_name.signal_changed().connect(sigc::mem_fun(*this, &RouterActionAdd::on_entry_change));
     entry_delay.signal_changed().connect(sigc::mem_fun(*this, &RouterActionAdd::on_entry_change));
 
@@ -39,15 +41,16 @@ RouterActionAdd::RouterActionAdd(RouterDrawingArea &area) : area_(area) {
 void RouterActionAdd::on_entry_change() {
     if (entry_name.get_text_length() && entry_delay.get_text_length() && is_number(entry_delay.get_text())) {
         label.set_label("在左侧图中点击生成路由器节点！");
-        drawing_area_connection_ = area_.gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterActionAdd::on_drawing_area_click));
     }
-    else {label.set_label("请输入路由器节点相关信息！"); drawing_area_connection_.disconnect();}
+    else {label.set_label("请输入路由器节点相关信息！");}
 }
 
 void RouterActionAdd::on_drawing_area_click(int,double x,double y) {
-    auto router = std::make_shared<Router>(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
-    router_graph.addNode(std::make_shared<RouterNode>(RouterNode{router,x,y,false}));
-    area_.queue_draw();
-    entry_name.set_text("");
-    entry_delay.set_text("");
+    if (label.get_text() == "在左侧图中点击生成路由器节点！") {
+        auto router = std::make_shared<Router>(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
+        router_graph.addNode(std::make_shared<RouterNode>(RouterNode{router,x,y,false}));
+        area_.queue_draw();
+        entry_name.set_text("");
+        entry_delay.set_text("");
+    }
 }

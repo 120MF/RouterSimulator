@@ -17,7 +17,6 @@ protected:
     void on_entry_change();
     void on_drawing_area_click(int,double,double);
 private:
-    sigc::connection drawing_area_connection_;
     RouterDrawingArea& area_;
 };
 
