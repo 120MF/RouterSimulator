@@ -36,7 +36,7 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
 
     router_graph.addNode(node1);
     router_graph.addNode(node2);
-    router_graph.addEdge(node1, node2, 1);
+    router_graph.addEdge(node1, node2, node1->router->delay() + node2->router->delay());
 }
 
 
@@ -45,7 +45,7 @@ void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int
     cr->paint();
     router_graph.visitAllNode([&cr, this](std::shared_ptr<RouterNode>& node) {
         router_graph.visitAllEdge(node, [&cr,node,this](const std::shared_ptr<RouterNode>& node_v, uint16_t weight) {
-            draw_edge(cr, node.get(), node_v.get());
+            draw_edge(cr, node, node_v);
         });
     });
     router_graph.visitAllNode([&cr,this](std::shared_ptr<RouterNode>& node) {
@@ -105,8 +105,8 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
     cr->restore();
 }
 
-void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode *node_s,
-    const RouterNode *node_v) {
+void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::shared_ptr<RouterNode> node_s,
+                                  std::shared_ptr<RouterNode> node_v) {
     cr->save();
 
     cr->set_source_rgb(0.0, 0.0, 0.0);
@@ -118,7 +118,7 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, const
     const double mid_x = (node_s->x + node_v->x) / 2;
     const double mid_y = (node_s->y + node_v->y) / 2;
 
-    const uint32_t weight = node_s->router->delay() + node_v->router->delay();
+    const uint32_t weight = router_graph.getEdgeWeight(node_s,node_v);
 
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);

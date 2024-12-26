@@ -48,7 +48,7 @@ protected:
     void on_motion(double x, double y);
 
     void draw_node(const Cairo::RefPtr<Cairo::Context>& cr, const RouterNode* node);
-    void draw_edge(const Cairo::RefPtr<Cairo::Context>& cr, const RouterNode* node_s, const RouterNode* node_v);
+    void draw_edge(const Cairo::RefPtr<Cairo::Context>& cr, std::shared_ptr<RouterNode> node_s, std::shared_ptr<RouterNode> node_v);
 private:
     Glib::RefPtr<Gtk::EventControllerMotion> motion_controller_;
     Glib::RefPtr<Cairo::FtFontFace> font_face_;
