@@ -52,18 +52,24 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     // font_face_ = load_font("/home/mf/codings/RouterSimulator/fonts/AlibabaPuHuiTi-3-75-SemiBold.ttf");
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
-    router_graph.addNode(std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"),100,100,false}));
-    router_graph.addNode(std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"),200,200,false}));
+    auto node1 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"),100,100,false});
+    auto node2 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"),200,200,false});
+
+    router_graph.addNode(node1);
+    router_graph.addNode(node2);
+    router_graph.addEdge(node1, node2, 1);
 }
 
 
 void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int) {
     cr->set_source_rgb(0.94509804,0.98039216,0.93333333);
     cr->paint();
-    router_graph.visitAllNode([&cr, this](const std::shared_ptr<RouterNode>& node) {
+    router_graph.visitAllNode([&cr, this](std::shared_ptr<RouterNode>& node) {
+        router_graph.visitAllEdge(node, [&cr,node,this](const std::shared_ptr<RouterNode>& node_v, uint16_t weight) {
+            draw_edge(cr, node.get(), node_v.get());
+        });
         draw_node(cr, node.get());
     });
-
 }
 
 void RouterDrawingArea::on_click(int n_press, double x, double y) {
@@ -114,6 +120,22 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
 
     cr->restore();
 }
+
+void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode *node_s,
+    const RouterNode *node_v) {
+    cr->save();
+
+    cr->set_source_rgb(0.0, 0.0, 0.0);
+
+    cr->move_to(node_s->x, node_s->y);
+
+    cr->line_to(node_v->x, node_v->y);
+
+    cr->stroke();
+
+    cr->restore();
+}
+
 
 RouterContainer::RouterContainer(): area_() {
     set_size_request(500,300);
