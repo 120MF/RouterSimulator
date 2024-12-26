@@ -2,6 +2,8 @@
 #include "RouterContainer.h"
 #include <iostream>
 #include <gtkmm/gestureclick.h>
+
+#include "NetworkManager.h"
 #include "RouterInfo.h"
 
 extern Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
@@ -52,6 +54,8 @@ void RouterActionAdd::on_drawing_area_click(int,double x,double y) {
         const auto node = std::make_shared<RouterNode>(router, x,y,false);
         router_graph.addNode(node);
         RouterInfo::NodeAdd(node);
+        const auto nm = NetworkManager::getInstance();
+        nm->addRouter(node->router.get());
         area_.queue_draw();
         entry_name.set_text("");
         entry_delay.set_text("");

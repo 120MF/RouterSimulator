@@ -1,5 +1,7 @@
 #include "RouterActionErase.h"
 #include <gtkmm/gestureclick.h>
+
+#include "NetworkManager.h"
 #include "RouterContainer.h"
 #include "RouterInfo.h"
 
@@ -16,6 +18,8 @@ void RouterActionErase::on_drawing_area_click(int, const double x, const double 
         if (isPosInRect(node->x,node->y, x, y)) {
             router_graph.removeNode(node);
             RouterInfo::NodeErase(node);
+            const auto nm = NetworkManager::getInstance();
+            nm->removeRouter(node->router.get());
             area_.queue_draw();
         }
     });

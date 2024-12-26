@@ -5,6 +5,8 @@
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/eventcontrollermotion.h>
 
+#include "NetworkManager.h"
+
 Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 
 constexpr double RECT_WIDTH = 60;
@@ -36,6 +38,12 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     router_graph.addNode(node1);
     router_graph.addNode(node2);
     router_graph.addEdge(node1, node2, node1->router->delay() + node2->router->delay());
+
+    const auto nm = NetworkManager::getInstance();
+
+    nm->addRouter(node1->router.get());
+    nm->addRouter(node2->router.get());
+    nm->connect(node1->router.get(), node2->router.get());
 }
 
 
