@@ -8,10 +8,11 @@
 #include "RouterToolBar.h"
 
 enum UsingAction {
-    AddRouter = 1,
-    EraseRouter = 2,
-    ConnectRouter = 3,
-    ShowShortestPath = 4,
+    Default,
+    AddRouter,
+    EraseRouter,
+    ConnectRouter,
+    ShowShortestPath,
 };
 
 class RouterDrawingArea;
@@ -19,24 +20,26 @@ class RouterDrawingArea;
 class RouterActionDefault : public Gtk::Box {
 public:
     RouterActionDefault();
+
 protected:
     Gtk::Label label;
 };
 
 
-
-class RouterActions : public Gtk::Box{
+class RouterActions : public Gtk::Box {
 public:
     RouterActions(RouterDrawingArea &area);
+
     void changeAction(UsingAction tool);
+
 protected:
     RouterToolBar tool_bar;
 
 private:
-    Gtk::Widget* current_widget;
+    Gtk::Widget *current_widget;
     RouterDrawingArea &area_;
+    UsingAction status_ = Default;
 };
-
 
 
 #endif //ROUTERACTIONS_H

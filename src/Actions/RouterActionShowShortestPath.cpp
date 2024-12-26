@@ -14,6 +14,10 @@ RouterActionShowShortestPath::RouterActionShowShortestPath(RouterDrawingArea &ar
         sigc::mem_fun(*this, &RouterActionShowShortestPath::on_drawing_area_click));
 }
 
+RouterActionShowShortestPath::~RouterActionShowShortestPath() {
+    RouterActionShowShortestPath::cleanupNodeBoolean();
+}
+
 void RouterActionShowShortestPath::cleanupNodeBoolean() {
     router_graph.visitAllNode([](const std::shared_ptr<RouterNode> &node) { node->onShortestPath = false; });
 }
