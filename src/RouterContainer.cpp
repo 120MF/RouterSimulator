@@ -1,6 +1,5 @@
 #include "RouterContainer.h"
 #include "data_structure/Graph.h"
-#include <iostream>
 #include <cairomm/context.h>
 #include <cairomm/fontface.h>
 #include <gtkmm/gestureclick.h>

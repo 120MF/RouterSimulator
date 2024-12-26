@@ -7,6 +7,8 @@ extern Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 
 Hashmap<Glib::ustring, std::shared_ptr<RouterNode>> node_map;
 
+Glib::RefPtr<Gtk::StringList> router_string_list;
+
 template<>
 struct std::hash<Glib::ustring> {
     std::size_t operator()(const Glib::ustring &str) const noexcept {
@@ -19,7 +21,7 @@ RouterInfo::RouterInfo() {
     router_string_list = Gtk::StringList::create();
     router_graph.visitAllNode([this](std::shared_ptr<RouterNode>& node) {
         const Glib::ustring str = node->router->get_name();
-       node_map.set(str, node);
+        node_map.set(str, node);
         router_string_list->append(str);
     });
     const auto first_router = node_map.get(router_string_list->get_string(0))->router;
@@ -36,6 +38,22 @@ RouterInfo::RouterInfo() {
     append(label_router_name);
     append(label_router_uuid);
     append(label_router_delay);
+}
+
+void RouterInfo::NodeAdd(const std::shared_ptr<RouterNode> &node) {
+    router_string_list->append(node->router->get_name());
+    node_map.set(node->router->get_name(), node);
+}
+
+void RouterInfo::NodeErase(const std::shared_ptr<RouterNode> &node) {
+    const Glib::ustring &name = node->router->get_name();
+    for (int i = 0; i < router_string_list->get_n_items(); ++i) {
+        if (router_string_list->get_string(i) == name) {
+            router_string_list->remove(i);
+            break;
+        }
+    }
+    node_map.set(node->router->get_name(), node);
 }
 
 void RouterInfo::on_dropdown_changed() {

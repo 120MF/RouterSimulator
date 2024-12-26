@@ -2,6 +2,7 @@
 #include "RouterContainer.h"
 #include <iostream>
 #include <gtkmm/gestureclick.h>
+#include "RouterInfo.h"
 
 extern Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 
@@ -47,8 +48,10 @@ void RouterActionAdd::on_entry_change() {
 
 void RouterActionAdd::on_drawing_area_click(int,double x,double y) {
     if (label.get_text() == "在左侧图中点击生成路由器节点！") {
-        auto router = std::make_shared<Router>(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
-        router_graph.addNode(std::make_shared<RouterNode>(RouterNode{router,x,y,false}));
+        const auto router = std::make_shared<Router>(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
+        const auto node = std::make_shared<RouterNode>(router, x,y,false);
+        router_graph.addNode(node);
+        RouterInfo::NodeAdd(node);
         area_.queue_draw();
         entry_name.set_text("");
         entry_delay.set_text("");

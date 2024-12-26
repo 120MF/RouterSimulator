@@ -20,7 +20,7 @@ struct RouterNode {
 template<>
 struct std::hash<RouterNode> {
     std::size_t operator()(const RouterNode &node) const noexcept {
-        return static_cast<std::size_t>(node.router->hash());
+        return node.router->hash();
     }
 };
 
