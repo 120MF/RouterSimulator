@@ -14,6 +14,7 @@ void RouterActionErase::on_drawing_area_click(int, const double x, const double 
     router_graph.visitAllNode([this,x,y](const std::shared_ptr<RouterNode>& node) {
         if (isPosInRect(node->x,node->y, x, y)) {
             router_graph.removeNode(node);
+            area_.queue_draw();
         }
     });
 }
