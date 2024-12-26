@@ -6,7 +6,7 @@
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/eventcontrollermotion.h>
 
-Graph<RouterNode, uint16_t> router_graph;
+Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 
 constexpr double RECT_WIDTH = 60;
 constexpr double RECT_HEIGHT = 40;
@@ -52,26 +52,26 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
     // font_face_ = load_font("/home/mf/codings/RouterSimulator/fonts/AlibabaPuHuiTi-3-75-SemiBold.ttf");
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
-    router_graph.addNode({new Router("1"),100,100,false});
-    router_graph.addNode({new Router("2"),200,200,false});
+    router_graph.addNode(std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"),100,100,false}));
+    router_graph.addNode(std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"),200,200,false}));
 }
 
 
 void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int) {
     cr->set_source_rgb(0.94509804,0.98039216,0.93333333);
     cr->paint();
-    router_graph.visitAllNode([&cr, this](const RouterNode& node) {
-        draw_node(cr, node);
+    router_graph.visitAllNode([&cr, this](const std::shared_ptr<RouterNode>& node) {
+        draw_node(cr, node.get());
     });
 
 }
 
 void RouterDrawingArea::on_click(int n_press, double x, double y) {
     std::cout << n_press << " " << x << " " << y << " " << std::endl;
-    router_graph.visitAllNode([this, x, y](RouterNode& node) {
-        if (isPosInRect(node.x, node.y, x, y)) {
-            node.selected = true;
-            selected_node_ = &node;
+    router_graph.visitAllNode([this, x, y](const std::shared_ptr<RouterNode>& node) {
+        if (isPosInRect(node->x, node->y, x, y)) {
+            node->selected = true;
+            selected_node_ = node.get();
             queue_draw();
         }
     });
@@ -92,11 +92,12 @@ void RouterDrawingArea::on_motion(double x, double y) {
         queue_draw();
     }
 }
-void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode &node) {
+void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode *node) {
+
     cr->save();
 
-    cr->rectangle(node.x - RECT_WIDTH / 2, node.y - RECT_HEIGHT / 2, RECT_WIDTH, RECT_HEIGHT);
-    if (selected_node_ == &node) cr->set_source_rgb(0.90196078, 0.22352941, 0.27450980);
+    cr->rectangle(node->x - RECT_WIDTH / 2, node->y - RECT_HEIGHT / 2, RECT_WIDTH, RECT_HEIGHT);
+    if (selected_node_ == node) cr->set_source_rgb(0.90196078, 0.22352941, 0.27450980);
     else cr->set_source_rgb(0.65882353,0.85490196,0.86274510);
     cr->fill_preserve();
     cr->set_source_rgb(0.0, 0.0, 0.0);
@@ -107,9 +108,9 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
     // cr->set_font_face(font_face_);
     cr->set_font_size(12);
     Cairo::TextExtents extents;
-    cr->get_text_extents(node.router->get_name(), extents);
-    cr->move_to(node.x - extents.width / 2, node.y + extents.height / 2);
-    cr->show_text(node.router->get_name());
+    cr->get_text_extents(node->router->get_name(), extents);
+    cr->move_to(node->x - extents.width / 2, node->y + extents.height / 2);
+    cr->show_text(node->router->get_name());
 
     cr->restore();
 }

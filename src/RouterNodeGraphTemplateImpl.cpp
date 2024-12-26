@@ -3,9 +3,9 @@
 #include "RouterContainer.h"
 
 template<>
-uint32_t ConcurrentHashCompute(const RouterNode& key) {
-    return std::hash<RouterNode>()(key);
+uint32_t ConcurrentHashCompute(const std::shared_ptr<RouterNode>& key) {
+    return std::hash<RouterNode>()(*key);
 }
-template class Graph<RouterNode, uint16_t>;
-template class ConcurrentHashmap<RouterNode,uint16_t>;
-template class ConcurrentHashmap<RouterNode, ConcurrentHashmap<RouterNode,uint16_t>*>;
+template class Graph<std::shared_ptr<RouterNode>, uint16_t>;
+template class ConcurrentHashmap<std::shared_ptr<RouterNode>,uint16_t>;
+template class ConcurrentHashmap<std::shared_ptr<RouterNode>, ConcurrentHashmap<std::shared_ptr<RouterNode>,uint16_t>*>;

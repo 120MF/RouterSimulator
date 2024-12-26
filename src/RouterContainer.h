@@ -11,43 +11,8 @@ bool isPosInRect(const double &nodeX, const double &nodeY, const double& clickX,
 
 
 struct RouterNode {
-    RouterNode(Router* r, const double xPos, const double yPos, const bool sel) : router(r), x(xPos), y(yPos), selected(sel){}
-    RouterNode(const RouterNode &other)
-        : router(other.router),
-          x(other.x),
-          y(other.y),
-          selected(other.selected) {
-    }
-
-    RouterNode(RouterNode &&other) noexcept
-        : router(other.router),
-          x(other.x),
-          y(other.y),
-          selected(other.selected) {
-    }
-
-    RouterNode & operator=(const RouterNode &other) {
-        if (this == &other)
-            return *this;
-        router = other.router;
-        x = other.x;
-        y = other.y;
-        selected = other.selected;
-        return *this;
-    }
-
-    RouterNode & operator=(RouterNode &&other) noexcept {
-        if (this == &other)
-            return *this;
-        router = other.router;
-        x = other.x;
-        y = other.y;
-        selected = other.selected;
-        return *this;
-    }
-
-    ~RouterNode(){delete router;}
-    Router* router;
+    RouterNode(const std::shared_ptr<Router>& r, const double xPos, const double yPos, const bool sel) : router(r), x(xPos), y(yPos), selected(sel){}
+    std::shared_ptr<Router> router;
     double x,y;
     bool selected;
 };
@@ -82,7 +47,7 @@ protected:
     void on_release(int, double, double);
     void on_motion(double x, double y);
 
-    void draw_node(const Cairo::RefPtr<Cairo::Context>& cr, const RouterNode& node);
+    void draw_node(const Cairo::RefPtr<Cairo::Context>& cr, const RouterNode* node);
 private:
     Glib::RefPtr<Gtk::EventControllerMotion> motion_controller_;
     Glib::RefPtr<Cairo::FtFontFace> font_face_;

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <gtkmm/gestureclick.h>
 
-extern Graph<RouterNode, uint16_t> router_graph;
+extern Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 
 bool is_number(const Glib::ustring& s) {
     return !s.empty() && std::ranges::all_of(s, ::isdigit);
@@ -46,8 +46,8 @@ void RouterActionAdd::on_entry_change() {
 
 void RouterActionAdd::on_drawing_area_click(int,double x,double y) {
     std::cout << "click!!" << std::endl;
-    auto router = new Router(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
-    router_graph.addNode({router,x,y,false});
+    auto router = std::make_shared<Router>(entry_name.get_text(), atoi(entry_delay.get_text().c_str()));
+    router_graph.addNode(std::make_shared<RouterNode>(RouterNode{router,x,y,false}));
     area_.queue_draw();
     entry_name.set_text("");
     entry_delay.set_text("");

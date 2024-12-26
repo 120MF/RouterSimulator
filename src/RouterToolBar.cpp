@@ -1,6 +1,5 @@
 #include "RouterToolBar.h"
 
-#include <iostream>
 #include <gtkmm/image.h>
 
 #include "RouterActions.h"

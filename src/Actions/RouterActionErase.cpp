@@ -2,7 +2,7 @@
 #include <gtkmm/gestureclick.h>
 #include "RouterContainer.h"
 
-extern Graph<RouterNode, uint16_t> router_graph;
+extern Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 
 RouterActionErase::RouterActionErase(RouterDrawingArea &area):area_(area) {
     label_.set_label("点击删除图中路由器节点");
@@ -11,8 +11,8 @@ RouterActionErase::RouterActionErase(RouterDrawingArea &area):area_(area) {
 }
 
 void RouterActionErase::on_drawing_area_click(int, const double x, const double y) {
-    router_graph.visitAllNode([this,x,y](const RouterNode& node) {
-        if (isPosInRect(node.x,node.y, x, y)) {
+    router_graph.visitAllNode([this,x,y](const std::shared_ptr<RouterNode>& node) {
+        if (isPosInRect(node->x,node->y, x, y)) {
             router_graph.removeNode(node);
         }
     });
