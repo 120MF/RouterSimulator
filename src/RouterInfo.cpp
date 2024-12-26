@@ -16,20 +16,17 @@ struct std::hash<Glib::ustring> {
 
 RouterInfo::RouterInfo() {
     set_orientation(Gtk::Orientation::VERTICAL);
-
-    std::vector<Glib::ustring> strings;
-    router_graph.visitAllNode([&strings](std::shared_ptr<RouterNode>& node) {
+    router_string_list = Gtk::StringList::create();
+    router_graph.visitAllNode([this](std::shared_ptr<RouterNode>& node) {
         const Glib::ustring str = node->router->get_name();
        node_map.set(str, node);
-        strings.push_back(str);
+        router_string_list->append(str);
     });
-    const auto first_router = node_map.get(strings.front())->router;
+    const auto first_router = node_map.get(router_string_list->get_string(0))->router;
     label_router_name.set_label("Router Name: " + first_router->get_name());
     label_router_uuid.set_label("Router UUID: " + first_router->get_uuid());
     label_router_delay.set_label("Router Delay: " + std::to_string(first_router->delay()));
 
-
-    router_string_list = Gtk::StringList::create(strings);
     router_drop_down.set_model(router_string_list);
     router_drop_down.set_selected(0);
 
