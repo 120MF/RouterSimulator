@@ -68,12 +68,13 @@ void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int
         router_graph.visitAllEdge(node, [&cr,node,this](const std::shared_ptr<RouterNode>& node_v, uint16_t weight) {
             draw_edge(cr, node.get(), node_v.get());
         });
-        draw_node(cr, node.get());
+    });
+    router_graph.visitAllNode([&cr,this](std::shared_ptr<RouterNode>& node) {
+       draw_node(cr, node.get());
     });
 }
 
 void RouterDrawingArea::on_click(int n_press, double x, double y) {
-    std::cout << n_press << " " << x << " " << y << " " << std::endl;
     router_graph.visitAllNode([this, x, y](const std::shared_ptr<RouterNode>& node) {
         if (isPosInRect(node->x, node->y, x, y)) {
             node->selected = true;
