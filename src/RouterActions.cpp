@@ -6,6 +6,7 @@
 
 #include "Actions/RouterActionConnect.h"
 #include "Actions/RouterActionErase.h"
+#include "Actions/RouterActionShowShortestPath.h"
 
 RouterActionDefault::RouterActionDefault() {
     label.set_label("请选择使用上方工具栏的工具！");
@@ -42,6 +43,13 @@ void RouterActions::changeAction(UsingAction tool) {
             remove(*current_widget);
             append(*routerConnector);
             current_widget = routerConnector;
+            break;
+        }
+        case ShowShortestPath: {
+            auto routerPathfinder = Gtk::manage(new RouterActionShowShortestPath(area_));
+            remove(*current_widget);
+            append(*routerPathfinder);
+            current_widget = routerPathfinder;
             break;
         }
         default:

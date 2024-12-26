@@ -15,6 +15,7 @@ struct RouterNode {
     std::shared_ptr<Router> router;
     double x,y;
     bool selected;
+    bool onShortestPath = false;
 };
 
 template<>

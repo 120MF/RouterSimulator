@@ -20,10 +20,16 @@ RouterToolBar::RouterToolBar() {
     button_connect.set_child(*icon_connect);
     button_connect.signal_clicked().connect(sigc::mem_fun(*this, &RouterToolBar::on_button_connect_pressed));
 
+    auto icon_show = Gtk::manage(new Gtk::Image("icon-show"));
+    button_showShortestPath.set_child(*icon_show);
+    button_showShortestPath.signal_clicked().connect(sigc::mem_fun(*this, &RouterToolBar::on_button_show_pressed));
+
+
 
     append(button_new);
     append(button_erase);
     append(button_connect);
+    append(button_showShortestPath);
 }
 
 void RouterToolBar::on_button_new_pressed() {
@@ -41,5 +47,11 @@ void RouterToolBar::on_button_erase_pressed() {
 void RouterToolBar::on_button_connect_pressed() {
     if (const auto parent = dynamic_cast<RouterActions*>(get_parent())) {
         parent->changeAction(ConnectRouter);
+    }
+}
+
+void RouterToolBar::on_button_show_pressed() {
+    if (const auto parent = dynamic_cast<RouterActions*>(get_parent())) {
+        parent->changeAction(ShowShortestPath);
     }
 }

@@ -12,14 +12,14 @@ Graph<std::shared_ptr<RouterNode>, uint16_t> router_graph;
 constexpr double RECT_WIDTH = 60;
 constexpr double RECT_HEIGHT = 40;
 
-bool isPosInRect(const double &nodeX, const double &nodeY, const double& clickX, const double& clickY) {
+bool isPosInRect(const double &nodeX, const double &nodeY, const double &clickX, const double &clickY) {
     const double dx = clickX - nodeX;
     const double dy = clickY - nodeY;
     if (dx >= -RECT_WIDTH / 2 && dx <= RECT_WIDTH / 2 && dy >= -RECT_HEIGHT / 2 && dy <= RECT_HEIGHT / 2) return true;
     return false;
 }
 
-RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
+RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr) {
     gesture_click = Gtk::GestureClick::create();
     gesture_click->signal_pressed().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_click));
     gesture_click->signal_released().connect(sigc::mem_fun(*this, &RouterDrawingArea::on_release));
@@ -31,8 +31,8 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
 
     set_draw_func(sigc::mem_fun(*this, &RouterDrawingArea::on_draw));
 
-    auto node1 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"),100,100,false});
-    auto node2 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"),200,200,false});
+    auto node1 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("1"), 100, 100, false});
+    auto node2 = std::make_shared<RouterNode>(RouterNode{std::make_shared<Router>("2"), 200, 200, false});
 
     router_graph.addNode(node1);
     router_graph.addNode(node2);
@@ -46,21 +46,21 @@ RouterDrawingArea::RouterDrawingArea() : selected_node_(nullptr){
 }
 
 
-void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int,int) {
-    cr->set_source_rgb(0.94509804,0.98039216,0.93333333);
+void RouterDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr, int, int) {
+    cr->set_source_rgb(0.94509804, 0.98039216, 0.93333333);
     cr->paint();
-    router_graph.visitAllNode([&cr, this](std::shared_ptr<RouterNode>& node) {
-        router_graph.visitAllEdge(node, [&cr,node,this](const std::shared_ptr<RouterNode>& node_v, uint16_t weight) {
+    router_graph.visitAllNode([&cr, this](std::shared_ptr<RouterNode> &node) {
+        router_graph.visitAllEdge(node, [&cr,node,this](const std::shared_ptr<RouterNode> &node_v, uint16_t weight) {
             draw_edge(cr, node, node_v);
         });
     });
-    router_graph.visitAllNode([&cr,this](std::shared_ptr<RouterNode>& node) {
-       draw_node(cr, node.get());
+    router_graph.visitAllNode([&cr,this](std::shared_ptr<RouterNode> &node) {
+        draw_node(cr, node.get());
     });
 }
 
 void RouterDrawingArea::on_click(int n_press, double x, double y) {
-    router_graph.visitAllNode([this, x, y](const std::shared_ptr<RouterNode>& node) {
+    router_graph.visitAllNode([this, x, y](const std::shared_ptr<RouterNode> &node) {
         if (isPosInRect(node->x, node->y, x, y)) {
             node->selected = true;
             selected_node_ = node.get();
@@ -84,19 +84,19 @@ void RouterDrawingArea::on_motion(double x, double y) {
         queue_draw();
     }
 }
-void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode *node) {
 
+void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const RouterNode *node) {
     cr->save();
 
     cr->rectangle(node->x - RECT_WIDTH / 2, node->y - RECT_HEIGHT / 2, RECT_WIDTH, RECT_HEIGHT);
     if (selected_node_ == node) cr->set_source_rgb(0.90196078, 0.22352941, 0.27450980);
-    else cr->set_source_rgb(0.65882353,0.85490196,0.86274510);
+    else cr->set_source_rgb(0.65882353, 0.85490196, 0.86274510);
     cr->fill_preserve();
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->stroke();
 
     cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->select_font_face("Sans",Cairo::ToyFontFace::Slant::NORMAL,Cairo::ToyFontFace::Weight::NORMAL);
+    cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
     cr->set_font_size(12);
     Cairo::TextExtents extents;
     cr->get_text_extents(node->router->get_name(), extents);
@@ -114,8 +114,10 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
 void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::shared_ptr<RouterNode> node_s,
                                   std::shared_ptr<RouterNode> node_v) {
     cr->save();
-
-    cr->set_source_rgb(0.0, 0.0, 0.0);
+    if (node_s->onShortestPath && node_v->onShortestPath) cr->set_source_rgb(0.8, 0.2, 0.2);
+    else
+        cr->
+                set_source_rgb(0.0, 0.0, 0.0);
 
     cr->move_to(node_s->x, node_s->y);
     cr->line_to(node_v->x, node_v->y);
@@ -124,7 +126,7 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::
     const double mid_x = (node_s->x + node_v->x) / 2;
     const double mid_y = (node_s->y + node_v->y) / 2;
 
-    const uint32_t weight = router_graph.getEdgeWeight(node_s,node_v);
+    const uint32_t weight = router_graph.getEdgeWeight(node_s, node_v);
 
     cr->set_source_rgb(0.0, 0.0, 0.0);
     cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
@@ -141,7 +143,7 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::
 
 
 RouterContainer::RouterContainer(): area_() {
-    set_size_request(500,300);
+    set_size_request(500, 300);
     set_margin(10);
     set_label("路由器界面");
     set_label_align(Gtk::Align::START);
