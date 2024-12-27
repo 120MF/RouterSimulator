@@ -24,7 +24,7 @@ void RouterActionConnect::on_drawing_area_click(int, double x, double y) {
                 label_.set_label("请在图中选择两个路由器！");
             } else {
                 another_node_ = node;
-                label_.set_label("已选中: " + node->router->get_name() + " 路由器；\n请再选择一个！");
+                label_.set_label("已选中路由器: " + node->router->get_name() + " ；\n请再选择一个！");
             }
         }
     });

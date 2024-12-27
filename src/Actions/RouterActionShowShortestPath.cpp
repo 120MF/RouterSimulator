@@ -56,7 +56,7 @@ void RouterActionShowShortestPath::on_drawing_area_click(int, double x, double y
             } else {
                 cleanupNodeBoolean();
                 another_node_ = node;
-                label_.set_label("已选中: " + node->router->get_name() + " 路由器；\n请再选择一个！");
+                label_.set_label("已选中路由器: " + node->router->get_name() + " ；\n请再选择一个！");
             }
         }
     }, flag);
