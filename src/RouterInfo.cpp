@@ -17,7 +17,6 @@ struct std::hash<Glib::ustring> {
 };
 
 RouterInfo::RouterInfo() {
-    set_orientation(Gtk::Orientation::VERTICAL);
     router_string_list = Gtk::StringList::create();
     router_graph.visitAllNode([this](std::shared_ptr<RouterNode> &node) {
         const Glib::ustring str = node->router->get_name();
@@ -34,11 +33,14 @@ RouterInfo::RouterInfo() {
 
     router_drop_down.property_selected().signal_changed().connect(
         sigc::mem_fun(*this, &RouterInfo::on_dropdown_changed));
+    auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    box->append(router_drop_down);
+    box->append(label_router_name);
+    box->append(label_router_uuid);
+    box->append(label_router_delay);
 
-    append(router_drop_down);
-    append(label_router_name);
-    append(label_router_uuid);
-    append(label_router_delay);
+    set_label("路由器信息");
+    set_child(*box);
 }
 
 void RouterInfo::NodeAdd(const std::shared_ptr<RouterNode> &node) {
