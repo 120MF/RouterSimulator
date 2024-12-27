@@ -8,8 +8,10 @@ pkg_check_modules(GTKMM gtkmm-4.0)
 link_directories(${GTKMM_LIBRARY_DIRS})
 include_directories(${GTKMM_INCLUDE_DIRS})
 
-add_subdirectory(librouter)
+
 set(GENERATE_EXAMPLE_PROGRAM OFF)
+set(GENERATE_BENCHMARK_TEST OFF)
+add_subdirectory(librouter)
 include_directories(librouter/src)
 
 include_directories(src)
