@@ -25,18 +25,19 @@ void RouterActionShowShortestPath::on_drawing_area_click(int, double x, double y
         if (isPosInRect(node->x, node->y, x, y)) {
             if (another_node_.get()) {
                 auto stack = node->router->getShortestPath(another_node_->router.get());
-                Glib::ustring label_str = "Shortest Path: " + another_node_->router->get_name() + " to " + node->router->get_name() + ":\n";
+                Glib::ustring label_str = "从路由器 " + another_node_->router->get_name() + " 到路由器 " + node->router->
+                                          get_name() + "的最短路径：\n";
                 uint32_t weight_sum = 0;
                 const auto nm = NetworkManager::getInstance();
-                Router* router_prev = nullptr;
+                Router *router_prev = nullptr;
                 while (!stack.isEmpty()) {
                     const auto router = stack.top();
                     auto router_node = router_graph.getNode(router->hash(),
-                                                                  [router](const std::shared_ptr<RouterNode> &node_) {
-                                                                      if (node_->router.get() == router)
-                                                                          return true;
-                                                                      else return false;
-                                                                  });
+                                                            [router](const std::shared_ptr<RouterNode> &node_) {
+                                                                if (node_->router.get() == router)
+                                                                    return true;
+                                                                else return false;
+                                                            });
                     label_str += router->get_name();
                     label_str += " <- ";
                     if (router_prev != nullptr)
@@ -48,7 +49,8 @@ void RouterActionShowShortestPath::on_drawing_area_click(int, double x, double y
                 another_node_ = nullptr;
                 flag = false;
                 label_str += "\n";
-                label_str += "Sum of weight: "; label_str += std::to_string(weight_sum);
+                label_str += "路线延迟（权重）总和: ";
+                label_str += std::to_string(weight_sum);
                 label_str += "\n请在图中选择两个路由器！";
                 label_.set_label(label_str);
             } else {

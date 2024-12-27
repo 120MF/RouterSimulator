@@ -119,7 +119,7 @@ void RouterDrawingArea::draw_edge(const Cairo::RefPtr<Cairo::Context> &cr, std::
                                   std::shared_ptr<RouterNode> node_v) {
     cr->save();
     if (node_s->onShortestPath && node_v->onShortestPath)
-        cr->set_source_rgb(0.8, 0.2, 0.2); //TODO: set #e63946
+        cr->set_source_rgb(0.90196078, 0.22352941, 0.27450980);
     else cr->set_source_rgb(0.0, 0.0, 0.0);
 
     cr->move_to(node_s->x, node_s->y);
