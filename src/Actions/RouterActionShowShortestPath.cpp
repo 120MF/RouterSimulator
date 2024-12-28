@@ -25,27 +25,23 @@ void RouterActionShowShortestPath::on_drawing_area_click(int, double x, double y
         if (isPosInRect(node->x, node->y, x, y)) {
             if (another_node_.get()) {
                 auto stack = node->router->getShortestPath(another_node_->router.get());
-                Glib::ustring label_str = "从路由器 " + another_node_->router->get_name() + " 到路由器 " + node->router->
-                                          get_name() + "的最短路径：\n";
-                uint32_t weight_sum = 0;
+                Glib::ustring label_str = "从路由器 " + another_node_->router->name() + " 到路由器 " + node->router->
+                                          name() + "的最短路径：\n";
                 const auto nm = NetworkManager::getInstance();
-                Router *router_prev = nullptr;
                 while (!stack.isEmpty()) {
                     const auto router = stack.top();
-                    auto router_node = router_graph.getNode(router->hash(),
-                                                            [router](const std::shared_ptr<RouterNode> &node_) {
-                                                                if (node_->router.get() == router)
-                                                                    return true;
-                                                                else return false;
-                                                            });
-                    label_str += router->get_name();
+                    const auto router_node = router_graph.getNode(router->hash(),
+                                                                  [router](const std::shared_ptr<RouterNode> &node_) {
+                                                                      if (node_->router.get() == router)
+                                                                          return true;
+                                                                      else return false;
+                                                                  });
+                    label_str += router->name();
                     label_str += " <- ";
-                    if (router_prev != nullptr)
-                        weight_sum += nm->getLineDelay(router, router_prev);
                     router_node->onShortestPath = true;
-                    router_prev = router;
                     stack.pop();
                 }
+                const uint32_t weight_sum = node->router->getShortestWeight(another_node_->router.get());
                 another_node_ = nullptr;
                 flag = false;
                 label_str += "\n";
@@ -56,7 +52,7 @@ void RouterActionShowShortestPath::on_drawing_area_click(int, double x, double y
             } else {
                 cleanupNodeBoolean();
                 another_node_ = node;
-                label_.set_label("已选中路由器: " + node->router->get_name() + " ；\n请再选择一个！");
+                label_.set_label("已选中路由器: " + node->router->name() + " ；\n请再选择一个！");
             }
         }
     }, flag);

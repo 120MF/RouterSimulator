@@ -103,9 +103,9 @@ void RouterDrawingArea::draw_node(const Cairo::RefPtr<Cairo::Context> &cr, const
     cr->select_font_face("Sans", Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
     cr->set_font_size(12);
     Cairo::TextExtents extents;
-    cr->get_text_extents(node->router->get_name(), extents);
+    cr->get_text_extents(node->router->name(), extents);
     cr->move_to(node->x - extents.width / 2, node->y + extents.height / 2);
-    cr->show_text(node->router->get_name());
+    cr->show_text(node->router->name());
 
     const std::string delay_s = std::to_string(node->router->delay());
     cr->get_text_extents(delay_s, extents);

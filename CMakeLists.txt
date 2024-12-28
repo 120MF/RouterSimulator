@@ -11,6 +11,7 @@ include_directories(${GTKMM_INCLUDE_DIRS})
 
 set(GENERATE_EXAMPLE_PROGRAM OFF)
 set(GENERATE_BENCHMARK_TEST OFF)
+set(GENERATE_CORRECTNESS_TEST OFF)
 add_subdirectory(librouter)
 include_directories(librouter/src)
 
